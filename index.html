@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Cambista Pro - App para gestionar cambios de divisas">
+  <meta name="description" content="swapmpro - app para gestionar cambios de divisas">
   <meta name="theme-color" content="#0ea5e9">
-  <title>swapMpro</title>
+  <title>swapmpro</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230ea5e9' width='192' height='192'/><text x='96' y='130' font-size='100' fill='white' text-anchor='middle' font-weight='bold'>C</text></svg>">
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230ea5e9' width='192' height='192'/><text x='96' y='130' font-size='100' fill='white' text-anchor='middle' font-weight='bold'>s</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -31,7 +31,7 @@
     }
     .container { max-width: 480px; margin: 0 auto; padding: 12px; }
 
-    /* Nav */
+    /* nav */
     .nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: var(--card); display: flex; justify-content: space-around;
@@ -69,7 +69,7 @@
     .section { display: none; }
     .section.active { display: block; }
 
-    /* Saldos barra */
+    /* saldos barra */
     .saldos-bar {
       background: var(--card); border-radius: 12px; padding: 10px 12px;
       margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
@@ -82,7 +82,7 @@
     .saldo-moneda { font-size: 0.75rem; color: var(--muted); }
     .saldo-valor { font-size: 0.95rem; font-weight: 600; color: var(--primary); }
 
-    /* Items lista */
+    /* items lista */
     .items-list { display: flex; flex-direction: column; gap: 8px; }
     .item {
       background: var(--bg); border-radius: 10px; padding: 10px;
@@ -96,10 +96,10 @@
     .ganancia-neg { color: var(--danger); font-weight: 600; }
     .item-monto { font-size: 0.85rem; color: var(--muted); }
 
-    /* Charts */
+    /* charts */
     .chart-container { position: relative; height: 250px; margin-bottom: 12px; }
 
-    /* Resultados */
+    /* resultados */
     .resultado {
       background: var(--bg); border-radius: 10px; padding: 12px;
       border-left: 3px solid var(--success);
@@ -111,77 +111,77 @@
 </head>
 <body>
 
-<!-- INICIO -->
+<!-- inicio -->
 <div id="inicioSec" class="section active">
   <div class="container">
     <div style="text-align: center; padding: 20px 0;">
       <div style="font-size: 2.5rem; margin-bottom: 10px;">💱</div>
-      <h1 style="font-size: 1.6rem; margin-bottom: 20px;">swapMpro</h1>
-      <p style="color: var(--muted); margin-bottom: 20px;">Gestor de cambios de divisas</p>
-      <button class="btn btn-success" onclick="irA('cambio')">Comenzar</button>
+      <h1 style="font-size: 1.6rem; margin-bottom: 20px;">swapmpro</h1>
+      <p style="color: var(--muted); margin-bottom: 20px;">gestor de cambios de divisas</p>
+      <button class="btn btn-success" onclick="irA('cambio')">comenzar</button>
     </div>
 
     <div class="card">
-      <label>Cotizaciones actuales (última actualización)</label>
+      <label>cotizaciones actuales (última actualización)</label>
       <div id="globoCotiz" style="font-size: 0.85rem; line-height: 1.8;"></div>
     </div>
   </div>
 </div>
 
-<!-- CAMBIO -->
+<!-- cambio -->
 <div id="cambioSec" class="section">
   <div class="container">
-    <h2 style="margin-bottom: 12px;">Registrar Cambio</h2>
+    <h2 style="margin-bottom: 12px;">registrar cambio</h2>
 
     <div class="card">
-      <label>Moneda que Recibís</label>
+      <label>moneda que recibís</label>
       <select id="recibisMon">
-        <option>USD</option>
-        <option>BRL</option>
-        <option>PY</option>
-        <option>CLP</option>
-        <option>COP</option>
+        <option>usd</option>
+        <option>brl</option>
+        <option>py</option>
+        <option>clp</option>
+        <option>cop</option>
       </select>
 
-      <label>Cantidad</label>
-      <input type="number" id="recibisQty" placeholder="Monto" step="0.01">
+      <label>cantidad</label>
+      <input type="number" id="recibisQty" placeholder="monto" step="0.01">
 
-      <label>Tipo de cambio</label>
-      <input type="number" id="tipoCambio" placeholder="Ej: 1200" step="0.01">
+      <label>tipo de cambio</label>
+      <input type="number" id="tipoCambio" placeholder="ej: 1200" step="0.01">
 
-      <label>Comisión (en ARS)</label>
+      <label>comisión (en ars)</label>
       <input type="number" id="comision" placeholder="0" step="0.01" value="0">
 
       <div class="row">
-        <button class="btn" onclick="calcularGanancia()">Calcular</button>
-        <button class="btn btn-secondary" onclick="limpiarCambio()">Limpiar</button>
+        <button class="btn" onclick="calcularGanancia()">calcular</button>
+        <button class="btn btn-secondary" onclick="limpiarCambio()">limpiar</button>
       </div>
     </div>
 
     <div id="resultCambio"></div>
 
     <div class="card">
-      <label>Notas (opcional)</label>
-      <input type="text" id="notasCambio" placeholder="Ej: Con cliente conocido">
-      <button class="btn btn-success" onclick="guardarOperacion()">Guardar Operación</button>
+      <label>notas (opcional)</label>
+      <input type="text" id="notasCambio" placeholder="ej: con cliente conocido">
+      <button class="btn btn-success" onclick="guardarOperacion()">guardar operación</button>
     </div>
   </div>
 </div>
 
-<!-- HISTORIAL -->
+<!-- historial -->
 <div id="historialSec" class="section">
   <div class="container">
-    <h2 style="margin-bottom: 12px;">Historial</h2>
+    <h2 style="margin-bottom: 12px;">historial</h2>
 
     <div class="card">
-      <label>Filtrar por moneda</label>
+      <label>filtrar por moneda</label>
       <select id="filterMon" onchange="actualizarHistorial()">
-        <option value="">Todas</option>
-        <option>USD</option>
-        <option>BRL</option>
-        <option>PY</option>
-        <option>CLP</option>
-        <option>COP</option>
+        <option value="">todas</option>
+        <option>usd</option>
+        <option>brl</option>
+        <option>py</option>
+        <option>clp</option>
+        <option>cop</option>
       </select>
     </div>
 
@@ -189,38 +189,38 @@
   </div>
 </div>
 
-<!-- SALDOS -->
+<!-- saldos -->
 <div id="saldosSec" class="section">
   <div class="container">
-    <h2 style="margin-bottom: 12px;">Saldos</h2>
+    <h2 style="margin-bottom: 12px;">saldos</h2>
     <div class="saldos-bar" id="saldosBar"></div>
   </div>
 </div>
 
-<!-- REPORTES -->
+<!-- reportes -->
 <div id="reportesSec" class="section">
   <div class="container">
-    <h2 style="margin-bottom: 12px;">Reportes</h2>
+    <h2 style="margin-bottom: 12px;">reportes</h2>
 
     <div class="card">
-      <label style="display: block; margin-bottom: 10px;">Filtro por moneda</label>
+      <label style="display: block; margin-bottom: 10px;">filtro por moneda</label>
       <select id="consolMoneda" onchange="genMoneda();genTotal()">
-        <option>ARS</option>
-        <option>USD</option>
+        <option>ars</option>
+        <option>usd</option>
       </select>
     </div>
 
     <div id="repTotalCont"></div>
 
     <div class="card" style="margin-top: 12px;">
-      <label>Ganancias últimos 7 días</label>
+      <label>ganancias últimos 7 días</label>
       <div class="chart-container">
         <canvas id="chartTotal"></canvas>
       </div>
     </div>
 
     <div class="card">
-      <label>Ganancia por moneda</label>
+      <label>ganancia por moneda</label>
       <div class="chart-container">
         <canvas id="chartMoneda"></canvas>
       </div>
@@ -228,37 +228,36 @@
     </div>
 
     <div class="card">
-      <label>Ganancias por hora (hoy)</label>
+      <label>ganancias por hora (hoy)</label>
       <div class="chart-container">
         <canvas id="chartDiario"></canvas>
       </div>
     </div>
 
     <div class="card">
-      <label>Comparar mes</label>
+      <label>comparar mes</label>
       <div id="compMesCont"></div>
     </div>
 
     <div class="card">
-      <button class="btn btn-danger" onclick="exportarJSON()">Descargar datos</button>
-      <button class="btn btn-secondary" style="margin-top: 8px;" onclick="borrarTodo()">Borrar todo</button>
+      <button class="btn btn-danger" onclick="exportarJSON()">descargar datos</button>
+      <button class="btn btn-secondary" style="margin-top: 8px;" onclick="borrarTodo()">borrar todo</button>
     </div>
   </div>
 </div>
 
-<!-- NAV -->
+<!-- nav -->
 <div class="nav">
-  <button class="nav-btn active" onclick="navBtn(0,'inicioSec')"><span>🏠</span>Inicio</button>
-  <button class="nav-btn" onclick="navBtn(1,'cambioSec')"><span>💱</span>Cambio</button>
-  <button class="nav-btn" onclick="navBtn(2,'historialSec')"><span>📋</span>Historial</button>
-  <button class="nav-btn" onclick="navBtn(3,'saldosSec')"><span>💰</span>Saldos</button>
-  <button class="nav-btn" onclick="navBtn(4,'reportesSec')"><span>📊</span>Reportes</button>
+  <button class="nav-btn active" onclick="navBtn(0,'inicioSec')"><span>🏠</span>inicio</button>
+  <button class="nav-btn" onclick="navBtn(1,'cambioSec')"><span>💱</span>cambio</button>
+  <button class="nav-btn" onclick="navBtn(2,'historialSec')"><span>📋</span>historial</button>
+  <button class="nav-btn" onclick="navBtn(3,'saldosSec')"><span>💰</span>saldos</button>
+  <button class="nav-btn" onclick="navBtn(4,'reportesSec')"><span>📊</span>reportes</button>
 </div>
 
 <script>
-  // Registrar Service Worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW error:', e));
+    navigator.serviceWorker.register('sw.js').catch(e => console.log('sw error:', e));
   }
 
   let operations = JSON.parse(localStorage.getItem('operations') || '[]');
@@ -284,7 +283,7 @@
       cotizaciones.oficial = data.oficial;
       actualizarGlobo();
     } catch (e) {
-      console.log('Error carga cotizaciones:', e);
+      console.log('error carga cotizaciones:', e);
     }
   }
 
@@ -292,9 +291,9 @@
     const blue = cotizaciones.blue || {venta: 1200};
     const oficial = cotizaciones.oficial || {venta: 900};
     document.getElementById('globoCotiz').innerHTML = `
-      <div>💵 USD Blue: $${blue.venta.toFixed(0)}</div>
-      <div>🏦 USD Oficial: $${oficial.venta.toFixed(0)}</div>
-      <div style="font-size:0.75rem; color:var(--muted); margin-top:4px;">Actualizado hace poco</div>
+      <div>💵 usd blue: $${blue.venta.toFixed(0)}</div>
+      <div>🏦 usd oficial: $${oficial.venta.toFixed(0)}</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:4px;">actualizado hace poco</div>
     `;
   }
 
@@ -305,7 +304,7 @@
     const comis = parseFloat(document.getElementById('comision').value) || 0;
 
     if (!qty || !tipo) {
-      document.getElementById('resultCambio').innerHTML = '<p class="error">Completa los campos</p>';
+      document.getElementById('resultCambio').innerHTML = '<p class="error">completa los campos</p>';
       return;
     }
 
@@ -314,18 +313,18 @@
 
     document.getElementById('resultCambio').innerHTML = `
       <div class="card">
-        <div style="font-size:0.85rem; color:var(--muted); margin-bottom:8px;">Resultado</div>
+        <div style="font-size:0.85rem; color:var(--muted); margin-bottom:8px;">resultado</div>
         <div style="font-size:1.4rem; font-weight:700; color:var(--success); margin-bottom:4px;">$${ganancia.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
         <div style="font-size:0.85rem;">
           <div>${qty} ${mon} × $${tipo.toFixed(2)} = $${montoARS.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
-          <div>Comisión: $${comis.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
+          <div>comisión: $${comis.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
         </div>
       </div>
     `;
   }
 
   function limpiarCambio() {
-    document.getElementById('recibisMon').value = 'USD';
+    document.getElementById('recibisMon').value = 'usd';
     document.getElementById('recibisQty').value = '';
     document.getElementById('tipoCambio').value = '';
     document.getElementById('comision').value = '0';
@@ -356,7 +355,7 @@
     operations.push(op);
     localStorage.setItem('operations', JSON.stringify(operations));
 
-    document.getElementById('resultCambio').innerHTML = '<p class="success-msg">✓ Operación guardada</p>';
+    document.getElementById('resultCambio').innerHTML = '<p class="success-msg">✓ operación guardada</p>';
     setTimeout(() => limpiarCambio(), 1500);
 
     actualizarHistorial();
@@ -376,15 +375,15 @@
           <span class="item-moneda">${o.recibisMon} - ${o.recibisQty}</span>
           <span class="ganancia-pos">$${o.gananciaARS.toLocaleString('es-AR', {maximumFractionDigits: 2})}</span>
         </div>
-        <div class="item-monto">${new Date(o.fecha).toLocaleString('es-AR')} | TC: ${o.tipoCambio}</div>
+        <div class="item-monto">${new Date(o.fecha).toLocaleString('es-AR')} | tc: ${o.tipoCambio}</div>
         ${o.notas ? `<div class="item-monto" style="color:var(--muted)">${o.notas}</div>` : ''}
-        <button class="btn-sm btn btn-danger" style="width:auto; margin-top:6px;" onclick="borrarOp(${o.id})">Eliminar</button>
+        <button class="btn-sm btn btn-danger" style="width:auto; margin-top:6px;" onclick="borrarOp(${o.id})">eliminar</button>
       </div>
-    `).join('') || '<p style="color:var(--muted)">Sin operaciones</p>';
+    `).join('') || '<p style="color:var(--muted)">sin operaciones</p>';
   }
 
   function borrarOp(id) {
-    if (confirm('¿Eliminar esta operación?')) {
+    if (confirm('¿eliminar esta operación?')) {
       operations = operations.filter(o => o.id !== id);
       localStorage.setItem('operations', JSON.stringify(operations));
       actualizarHistorial();
@@ -414,7 +413,7 @@
 
     document.getElementById('repMonedaCont').innerHTML = Object.entries(por).map(([m, v]) =>
       `<div class="item"><div class="item-header"><span>${m}</span><span class="ganancia-pos">$${v.toLocaleString('es-AR')}</span></div></div>`
-    ).join('') || '<p style="color:var(--muted)">Sin datos</p>';
+    ).join('') || '<p style="color:var(--muted)">sin datos</p>';
 
     if (charts.moneda) charts.moneda.destroy();
     charts.moneda = new Chart(document.getElementById('chartMoneda'), {
@@ -433,19 +432,18 @@
   function genTotal() {
     const totalARS = operations.reduce((s, o) => s + o.gananciaARS, 0);
     const mon = document.getElementById('consolMoneda').value;
-    let txt = mon === 'USD'
-      ? (totalARS / (cotizaciones.blue?.venta || 1550)).toFixed(2) + ' USD'
+    let txt = mon === 'usd'
+      ? (totalARS / (cotizaciones.blue?.venta || 1550)).toFixed(2) + ' usd'
       : '$' + totalARS.toLocaleString('es-AR');
 
     document.getElementById('repTotalCont').innerHTML = `
       <div class="resultado">
-        <div style="color:var(--muted)">Ganancia total histórica</div>
+        <div style="color:var(--muted)">ganancia total histórica</div>
         <div style="font-size:1.6rem;font-weight:700;color:var(--success)">${txt}</div>
         <div style="font-size:0.85rem">${operations.length} operaciones</div>
       </div>
     `;
 
-    // últimos 7 días
     const dias = {};
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
@@ -467,7 +465,6 @@
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
 
-    // Diario por hora
     const porHora = {};
     operations.forEach(o => {
       const h = new Date(o.fecha).getHours();
@@ -503,10 +500,10 @@
     const diff = act - ant;
     document.getElementById('compMesCont').innerHTML = `
       <div class="resultado">
-        <div>Mes actual: <strong>$${act.toLocaleString('es-AR')}</strong></div>
-        <div>Mes anterior: <strong>$${ant.toLocaleString('es-AR')}</strong></div>
+        <div>mes actual: <strong>$${act.toLocaleString('es-AR')}</strong></div>
+        <div>mes anterior: <strong>$${ant.toLocaleString('es-AR')}</strong></div>
         <div style="margin-top:6px;color:${diff >= 0 ? '#10b981' : '#ef4444'}">
-          Diferencia: $${diff.toLocaleString('es-AR')}
+          diferencia: $${diff.toLocaleString('es-AR')}
         </div>
       </div>
     `;
@@ -518,13 +515,13 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `cambista-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `swapmpro-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
   }
 
   function borrarTodo() {
-    if (confirm('⚠️ ¿Borrar TODOS los datos? No se puede deshacer')) {
-      if (confirm('¿Seguro?')) {
+    if (confirm('⚠️ ¿borrar TODOS los datos? no se puede deshacer')) {
+      if (confirm('¿seguro?')) {
         operations = [];
         localStorage.setItem('operations', JSON.stringify(operations));
         location.reload();

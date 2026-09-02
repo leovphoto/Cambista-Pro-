@@ -1,165 +1,156 @@
-# swapMpro 💱
+# swapmpro 💱
 
-**App para gestionar cambios de divisas** - Calcula ganancias, mantén registros y emite reportes.
+**app para gestionar cambios de divisas** - calcula ganancias, mantén registros y emite reportes.
 
-## Características
+## características
 
-✅ **Registrar cambios** de divisas con cálculo automático de ganancias
-✅ **Historial completo** de todas las operaciones
-✅ **Reportes visuales** con gráficos de ganancias
-✅ **Seguimiento de saldos** por moneda
-✅ **Funcionamiento offline** - Trabaja sin internet
-✅ **Actualizaciones automáticas** - Los cambios se cargan automáticamente
-✅ **Datos privados** - Todo se guarda en tu dispositivo
+✅ **registrar cambios** de divisas con cálculo automático de ganancias
+✅ **historial completo** de todas las operaciones
+✅ **reportes visuales** con gráficos de ganancias
+✅ **seguimiento de saldos** por moneda
+✅ **funcionamiento offline** - trabaja sin internet
+✅ **actualizaciones automáticas** - los cambios se cargan automáticamente
+✅ **datos privados** - todo se guarda en tu dispositivo
 
 ---
 
-## 🚀 Instalación en GitHub Pages
+## 🚀 instalación en github pages
 
-### Paso 1: Crea un repositorio en GitHub
+### paso 1: crea un repositorio en github
 
-1. Ve a [github.com](https://github.com) y loguéate
-2. Click en **"+"** → **"New repository"**
-3. Nombre: `cambista-app` (o el que prefieras)
-4. ✅ **Marca "Private"** (para que sea privado)
-5. Click en **"Create repository"**
+1. ve a github.com y loguéate
+2. click en **"+"** → **"new repository"**
+3. nombre: `swapmpro-app` (o el que prefieras)
+4. ✅ **marca "private"** (para que sea privado)
+5. click en **"create repository"**
 
-### Paso 2: Sube los archivos
+### paso 2: sube los archivos
 
-**Opción A: Usando Git (línea de comandos)**
+**opción a: usando git (línea de comandos)**
 
 ```bash
-# 1. Clona tu repositorio
-git clone https://github.com/tunombre/cambista-app.git
-cd cambista-app
+# 1. clona tu repositorio
+git clone https://github.com/tunombre/swapmpro-app.git
+cd swapmpro-app
 
-# 2. Copia los archivos aquí:
+# 2. copia los archivos aquí:
 # - index.html
 # - manifest.json
 # - sw.js
-# - README.md (este archivo)
+# - readme.md (este archivo)
 
-# 3. Sube los cambios
+# 3. sube los cambios
 git add .
-git commit -m "Primer commit - Cambista Pro"
+git commit -m "primer commit - swapmpro"
 git push origin main
 ```
 
-**Opción B: Usando la interfaz web (más fácil)**
+**opción b: usando la interfaz web (más fácil)**
 
-1. En tu repositorio, click en **"Add file"** → **"Upload files"**
-2. Arrastra o selecciona estos archivos:
+1. en tu repositorio, click en **"add file"** → **"upload files"**
+2. arrastra o selecciona estos archivos:
    - `index.html`
    - `manifest.json`
    - `sw.js`
-3. Click en **"Commit changes"**
+3. click en **"commit changes"**
 
-### Paso 3: Activa GitHub Pages
+### paso 3: activa github pages
 
-1. En tu repositorio, ve a **Settings** → **Pages**
-2. En "Build and deployment":
-   - Source: **Deploy from a branch**
-   - Branch: **main** (o master)
-   - Folder: **/ (root)**
-3. Click en **Save**
+1. en tu repositorio, ve a **settings** → **pages**
+2. en "build and deployment":
+   - source: **deploy from a branch**
+   - branch: **main** (o master)
+   - folder: **/ (root)**
+3. click en **save**
 
-**Espera 1-2 minutos** y listo. Tu app estará en:
+**espera 1-2 minutos** y listo. tu app estará en:
 ```
-https://tunombre.github.io/cambista-app/
-```
-
----
-
-## 📱 Acceso desde móvil
-
-### iPhone (iOS)
-
-1. Abre Safari
-2. Ve a: `https://tunombre.github.io/cambista-app/`
-3. Click en el botón **Compartir** (↑)
-4. Selecciona **"Agregar a pantalla de inicio"**
-5. Click en **"Agregar"**
-
-✅ La app aparecerá como icono en tu pantalla de inicio
-
-### Android
-
-1. Abre Chrome (o Firefox)
-2. Ve a: `https://tunombre.github.io/cambista-app/`
-3. Espera a que aparezca el banner **"Instalar app"**
-4. Click en **"Instalar"**
-
-O manualmente:
-1. Menú ⋮ → **"Instalar aplicación"**
-2. Click en **"Instalar"**
-
-✅ La app se instalará como app nativa
-
----
-
-## 🔄 Actualizaciones automáticas
-
-Cada vez que hagas cambios en GitHub:
-
-1. Edita `index.html` (o cualquier archivo)
-2. Haz commit y push
-3. Espera **1-2 minutos** a que GitHub Pages actualice
-4. En tu móvil: **Cierra y abre la app nuevamente**
-
-La app detectará automáticamente los cambios y se actualizará.
-
----
-
-## 💾 Datos
-
-- **Se guardan en tu dispositivo** (localStorage)
-- **100% privados** - Nadie más tiene acceso
-- **Exportar datos**: En la sección Reportes → "Descargar datos"
-- **Respaldar**: Descarga el JSON regularmente
-
----
-
-## 🛠️ Para tu amigo (cambista)
-
-Simplemente comparte el link:
-```
-https://tunombre.github.io/cambista-app/
+https://tunombre.github.io/swapmpro-app/
 ```
 
-Él puede:
-- 📱 Instalarla en su móvil como app
-- 💰 Registrar cambios mientras trabaja
-- 📊 Ver reportes en tiempo real
-- 📥 Exportar datos cuando lo necesite
+---
+
+## 📱 acceso desde móvil
+
+### iphone (ios)
+
+1. abre safari
+2. ve a: `https://tunombre.github.io/swapmpro-app/`
+3. click en el botón **compartir** (↑)
+4. selecciona **"agregar a pantalla de inicio"**
+5. click en **"agregar"**
+
+✅ la app aparecerá como icono en tu pantalla de inicio
+
+### android
+
+1. abre chrome (o firefox)
+2. ve a: `https://tunombre.github.io/swapmpro-app/`
+3. espera a que aparezca el banner **"instalar app"**
+4. click en **"instalar"**
+
+o manualmente:
+1. menú ⋮ → **"instalar aplicación"**
+2. click en **"instalar"**
+
+✅ la app se instalará como app nativa
 
 ---
 
-## 🔒 Privacidad
+## 🔄 actualizaciones automáticas
 
-- ✅ Repositorio privado en GitHub (solo tú ves el código)
-- ✅ App funciona sin conectarse a servidores
-- ✅ Los datos se guardan localmente en el dispositivo
-- ✅ Solo quienes tengan el link pueden acceder
-- ⚠️ El código HTML es visible (es JavaScript de cliente)
+cada vez que hagas cambios en github:
 
----
+1. edita `index.html` (o cualquier archivo)
+2. haz commit y push
+3. espera **1-2 minutos** a que github pages actualice
+4. en tu móvil: **cierra y abre la app nuevamente**
 
-## 📝 Notas
-
-- La app **se actualiza automáticamente** cada vez que cambias algo en GitHub
-- Funciona **completamente offline**
-- Las cotizaciones se actualizan cada 60 segundos (requiere internet)
-- Todos los datos se guardan **en el dispositivo**, no en un servidor
+la app detectará automáticamente los cambios y se actualizará.
 
 ---
 
-## 🤝 Soporte
+## 💾 datos
 
-Si necesitas cambios o mejoras:
-1. Edita `index.html`
-2. Haz commit y push
-3. Los cambios aparecerán automáticamente en la app
+- **se guardan en tu dispositivo** (localstorage)
+- **100% privados** - nadie más tiene acceso
+- **exportar datos**: en la sección reportes → "descargar datos"
+- **respaldar**: descarga el json regularmente
 
 ---
 
-**Desarrollado con ❤️ para swapMpro**
+## 🛠️ para tu amigo (cambista)
+
+simplemente comparte el link:
+```
+https://tunombre.github.io/swapmpro-app/
+```
+
+él puede:
+- 📱 instalarla en su móvil como app
+- 💰 registrar cambios mientras trabaja
+- 📊 ver reportes en tiempo real
+- 📥 exportar datos cuando lo necesite
+
+---
+
+## 🔒 privacidad
+
+- ✅ repositorio privado en github (solo tú ves el código)
+- ✅ app funciona sin conectarse a servidores
+- ✅ los datos se guardan localmente en el dispositivo
+- ✅ solo quienes tengan el link pueden acceder
+- ⚠️ el código html es visible (es javascript de cliente)
+
+---
+
+## 📝 notas
+
+- la app **se actualiza automáticamente** cada vez que cambias algo en github
+- funciona **completamente offline**
+- las cotizaciones se actualizan cada 60 segundos (requiere internet)
+- todos los datos se guardan **en el dispositivo**, no en un servidor
+
+---
+
+**desarrollado con ❤️ para swapmpro**

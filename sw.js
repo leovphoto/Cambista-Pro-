@@ -5,29 +5,29 @@ const urlsToCache = [
   '/manifest.json'
 ];
 
-// Instalar Service Worker
+// instalar service worker
 self.addEventListener('install', event => {
-  console.log('Service Worker instalando...');
+  console.log('service worker instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('Cache abierto');
+      console.log('cache abierto');
       return cache.addAll(urlsToCache).catch(err => {
-        console.log('Error cacheando archivos:', err);
+        console.log('error cacheando archivos:', err);
       });
     })
   );
   self.skipWaiting();
 });
 
-// Activar Service Worker
+// activar service worker
 self.addEventListener('activate', event => {
-  console.log('Service Worker activando...');
+  console.log('service worker activando...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Eliminando cache antiguo:', cacheName);
+            console.log('eliminando cache antiguo:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -37,14 +37,14 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Estrategia: Network first, fallback a cache
+// estrategia: network first, fallback a cache
 self.addEventListener('fetch', event => {
-  // Solo cachear GET
+  // solo cachear get
   if (event.request.method !== 'GET') {
     return;
   }
 
-  // Para APIs (cotizaciones): network first con cache fallback
+  // para apis (cotizaciones): network first con cache fallback
   if (event.request.url.includes('api.')) {
     event.respondWith(
       fetch(event.request)
@@ -60,17 +60,17 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Para archivos locales: cache first, network second
+  // para archivos locales: cache first, network second
   event.respondWith(
     caches.match(event.request).then(response => {
       if (response) {
-        // Fetch en background para actualizar
+        // fetch en background para actualizar
         fetch(event.request).then(freshResponse => {
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, freshResponse.clone());
           });
           
-          // Notificar al cliente si hay actualización
+          // notificar al cliente si hay actualización
           self.clients.matchAll().then(clients => {
             clients.forEach(client => {
               client.postMessage({
@@ -79,7 +79,7 @@ self.addEventListener('fetch', event => {
             });
           });
         }).catch(() => {
-          // Sin internet, ignorar
+          // sin internet, ignorar
         });
 
         return response;
@@ -105,7 +105,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Escuchar mensajes del cliente
+// escuchar mensajes del cliente
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
