@@ -2,7 +2,7 @@
   "name": "swapmpro",
   "short_name": "swapm",
   "description": "gestor de cambios de divisas - calcula ganancias, mantén registros y emite reportes",
-  "start_url": "/swapmpro-app/",
+  "start_url": "https://leovphoto.github.io/swapmpro-app/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
