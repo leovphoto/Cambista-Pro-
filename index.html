@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Cambista Pro - App para gestionar cambios de divisas">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Cambista Pro</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230ea5e9' width='192' height='192'/><text x='96' y='130' font-size='100' fill='white' text-anchor='middle' font-weight='bold'>C</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --primary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 75px;
+      line-height: 1.4;
+    }
+    .container { max-width: 480px; margin: 0 auto; padding: 12px; }
+
+    /* Nav */
+    .nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--card); display: flex; justify-content: space-around;
+      padding: 8px 0; border-top: 1px solid #334155; z-index: 100;
+    }
+    .nav-btn {
+      background: none; border: none; color: var(--muted); font-size: 0.68rem;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; padding: 6px 10px;
+    }
+    .nav-btn.active { color: var(--primary); }
+    .nav-btn span { font-size: 1.25rem; }
+
+    .card {
+      background: var(--card); border-radius: 14px; padding: 14px;
+      margin-bottom: 12px;
+    }
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
+    select, input {
+      width: 100%; padding: 11px; font-size: 1rem; border: none;
+      border-radius: 10px; background: var(--bg); color: var(--text); margin-bottom: 10px;
+    }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+    .btn {
+      width: 100%; padding: 13px; font-size: 1rem; font-weight: 600;
+      border: none; border-radius: 11px; background: var(--primary); color: white;
+      cursor: pointer; margin-top: 4px;
+    }
+    .btn-success { background: var(--success); }
+    .btn-secondary { background: #475569; }
+    .btn-danger { background: var(--danger); }
+    .btn-sm { padding: 8px 12px; font-size: 0.85rem; width: auto; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Saldos barra */
+    .saldos-bar {
+      background: var(--card); border-radius: 12px; padding: 10px 12px;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+      overflow-x: auto;
+    }
+    .saldo-item {
+      display: flex; flex-direction: column; align-items: center; min-width: 80px;
+      padding: 6px 8px; background: var(--bg); border-radius: 8px;
+    }
+    .saldo-moneda { font-size: 0.75rem; color: var(--muted); }
+    .saldo-valor { font-size: 0.95rem; font-weight: 600; color: var(--primary); }
+
+    /* Items lista */
+    .items-list { display: flex; flex-direction: column; gap: 8px; }
+    .item {
+      background: var(--bg); border-radius: 10px; padding: 10px;
+      border-left: 3px solid var(--primary);
+    }
+    .item-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;
+    }
+    .item-moneda { font-weight: 600; }
+    .ganancia-pos { color: var(--success); font-weight: 600; }
+    .ganancia-neg { color: var(--danger); font-weight: 600; }
+    .item-monto { font-size: 0.85rem; color: var(--muted); }
+
+    /* Charts */
+    .chart-container { position: relative; height: 250px; margin-bottom: 12px; }
+
+    /* Resultados */
+    .resultado {
+      background: var(--bg); border-radius: 10px; padding: 12px;
+      border-left: 3px solid var(--success);
+    }
+
+    .error { color: var(--danger); font-size: 0.85rem; }
+    .success-msg { color: var(--success); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<!-- INICIO -->
+<div id="inicioSec" class="section active">
+  <div class="container">
+    <div style="text-align: center; padding: 20px 0;">
+      <div style="font-size: 2.5rem; margin-bottom: 10px;">💱</div>
+      <h1 style="font-size: 1.6rem; margin-bottom: 20px;">Cambista Pro</h1>
+      <p style="color: var(--muted); margin-bottom: 20px;">Gestor de cambios de divisas</p>
+      <button class="btn btn-success" onclick="irA('cambio')">Comenzar</button>
+    </div>
+
+    <div class="card">
+      <label>Cotizaciones actuales (última actualización)</label>
+      <div id="globoCotiz" style="font-size: 0.85rem; line-height: 1.8;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMBIO -->
+<div id="cambioSec" class="section">
+  <div class="container">
+    <h2 style="margin-bottom: 12px;">Registrar Cambio</h2>
+
+    <div class="card">
+      <label>Moneda que Recibís</label>
+      <select id="recibisMon">
+        <option>USD</option>
+        <option>BRL</option>
+        <option>PY</option>
+        <option>CLP</option>
+        <option>COP</option>
+      </select>
+
+      <label>Cantidad</label>
+      <input type="number" id="recibisQty" placeholder="Monto" step="0.01">
+
+      <label>Tipo de cambio</label>
+      <input type="number" id="tipoCambio" placeholder="Ej: 1200" step="0.01">
+
+      <label>Comisión (en ARS)</label>
+      <input type="number" id="comision" placeholder="0" step="0.01" value="0">
+
+      <div class="row">
+        <button class="btn" onclick="calcularGanancia()">Calcular</button>
+        <button class="btn btn-secondary" onclick="limpiarCambio()">Limpiar</button>
+      </div>
+    </div>
+
+    <div id="resultCambio"></div>
+
+    <div class="card">
+      <label>Notas (opcional)</label>
+      <input type="text" id="notasCambio" placeholder="Ej: Con cliente conocido">
+      <button class="btn btn-success" onclick="guardarOperacion()">Guardar Operación</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIAL -->
+<div id="historialSec" class="section">
+  <div class="container">
+    <h2 style="margin-bottom: 12px;">Historial</h2>
+
+    <div class="card">
+      <label>Filtrar por moneda</label>
+      <select id="filterMon" onchange="actualizarHistorial()">
+        <option value="">Todas</option>
+        <option>USD</option>
+        <option>BRL</option>
+        <option>PY</option>
+        <option>CLP</option>
+        <option>COP</option>
+      </select>
+    </div>
+
+    <div id="historialList" class="items-list"></div>
+  </div>
+</div>
+
+<!-- SALDOS -->
+<div id="saldosSec" class="section">
+  <div class="container">
+    <h2 style="margin-bottom: 12px;">Saldos</h2>
+    <div class="saldos-bar" id="saldosBar"></div>
+  </div>
+</div>
+
+<!-- REPORTES -->
+<div id="reportesSec" class="section">
+  <div class="container">
+    <h2 style="margin-bottom: 12px;">Reportes</h2>
+
+    <div class="card">
+      <label style="display: block; margin-bottom: 10px;">Filtro por moneda</label>
+      <select id="consolMoneda" onchange="genMoneda();genTotal()">
+        <option>ARS</option>
+        <option>USD</option>
+      </select>
+    </div>
+
+    <div id="repTotalCont"></div>
+
+    <div class="card" style="margin-top: 12px;">
+      <label>Ganancias últimos 7 días</label>
+      <div class="chart-container">
+        <canvas id="chartTotal"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Ganancia por moneda</label>
+      <div class="chart-container">
+        <canvas id="chartMoneda"></canvas>
+      </div>
+      <div id="repMonedaCont" class="items-list" style="margin-top: 10px;"></div>
+    </div>
+
+    <div class="card">
+      <label>Ganancias por hora (hoy)</label>
+      <div class="chart-container">
+        <canvas id="chartDiario"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Comparar mes</label>
+      <div id="compMesCont"></div>
+    </div>
+
+    <div class="card">
+      <button class="btn btn-danger" onclick="exportarJSON()">Descargar datos</button>
+      <button class="btn btn-secondary" style="margin-top: 8px;" onclick="borrarTodo()">Borrar todo</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="navBtn(0,'inicioSec')"><span>🏠</span>Inicio</button>
+  <button class="nav-btn" onclick="navBtn(1,'cambioSec')"><span>💱</span>Cambio</button>
+  <button class="nav-btn" onclick="navBtn(2,'historialSec')"><span>📋</span>Historial</button>
+  <button class="nav-btn" onclick="navBtn(3,'saldosSec')"><span>💰</span>Saldos</button>
+  <button class="nav-btn" onclick="navBtn(4,'reportesSec')"><span>📊</span>Reportes</button>
+</div>
+
+<script>
+  // Registrar Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW error:', e));
+  }
+
+  let operations = JSON.parse(localStorage.getItem('operations') || '[]');
+  let cotizaciones = {};
+  const charts = {};
+
+  function irA(sec) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sec + 'Sec').classList.add('active');
+  }
+
+  function navBtn(idx, sec) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.closest('.nav-btn').classList.add('active');
+    irA(sec);
+  }
+
+  async function cargarCotos() {
+    try {
+      const res = await fetch('https://api.bluelytics.com.ar/v2/latest');
+      const data = await res.json();
+      cotizaciones.blue = data.blue;
+      cotizaciones.oficial = data.oficial;
+      actualizarGlobo();
+    } catch (e) {
+      console.log('Error carga cotizaciones:', e);
+    }
+  }
+
+  function actualizarGlobo() {
+    const blue = cotizaciones.blue || {venta: 1200};
+    const oficial = cotizaciones.oficial || {venta: 900};
+    document.getElementById('globoCotiz').innerHTML = `
+      <div>💵 USD Blue: $${blue.venta.toFixed(0)}</div>
+      <div>🏦 USD Oficial: $${oficial.venta.toFixed(0)}</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:4px;">Actualizado hace poco</div>
+    `;
+  }
+
+  function calcularGanancia() {
+    const mon = document.getElementById('recibisMon').value;
+    const qty = parseFloat(document.getElementById('recibisQty').value);
+    const tipo = parseFloat(document.getElementById('tipoCambio').value);
+    const comis = parseFloat(document.getElementById('comision').value) || 0;
+
+    if (!qty || !tipo) {
+      document.getElementById('resultCambio').innerHTML = '<p class="error">Completa los campos</p>';
+      return;
+    }
+
+    const montoARS = qty * tipo;
+    const ganancia = montoARS - comis;
+
+    document.getElementById('resultCambio').innerHTML = `
+      <div class="card">
+        <div style="font-size:0.85rem; color:var(--muted); margin-bottom:8px;">Resultado</div>
+        <div style="font-size:1.4rem; font-weight:700; color:var(--success); margin-bottom:4px;">$${ganancia.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
+        <div style="font-size:0.85rem;">
+          <div>${qty} ${mon} × $${tipo.toFixed(2)} = $${montoARS.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
+          <div>Comisión: $${comis.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function limpiarCambio() {
+    document.getElementById('recibisMon').value = 'USD';
+    document.getElementById('recibisQty').value = '';
+    document.getElementById('tipoCambio').value = '';
+    document.getElementById('comision').value = '0';
+    document.getElementById('notasCambio').value = '';
+    document.getElementById('resultCambio').innerHTML = '';
+  }
+
+  function guardarOperacion() {
+    const mon = document.getElementById('recibisMon').value;
+    const qty = parseFloat(document.getElementById('recibisQty').value);
+    const tipo = parseFloat(document.getElementById('tipoCambio').value);
+    const comis = parseFloat(document.getElementById('comision').value) || 0;
+    const notas = document.getElementById('notasCambio').value;
+
+    if (!qty || !tipo) return;
+
+    const op = {
+      id: Date.now(),
+      fecha: new Date().toISOString(),
+      recibisMon: mon,
+      recibisQty: qty,
+      tipoCambio: tipo,
+      comision: comis,
+      gananciaARS: (qty * tipo) - comis,
+      notas
+    };
+
+    operations.push(op);
+    localStorage.setItem('operations', JSON.stringify(operations));
+
+    document.getElementById('resultCambio').innerHTML = '<p class="success-msg">✓ Operación guardada</p>';
+    setTimeout(() => limpiarCambio(), 1500);
+
+    actualizarHistorial();
+    actualizarSaldos();
+    genMoneda();
+    genTotal();
+  }
+
+  function actualizarHistorial() {
+    const filter = document.getElementById('filterMon')?.value || '';
+    let ops = operations;
+    if (filter) ops = operations.filter(o => o.recibisMon === filter);
+
+    document.getElementById('historialList').innerHTML = ops.reverse().map(o => `
+      <div class="item">
+        <div class="item-header">
+          <span class="item-moneda">${o.recibisMon} - ${o.recibisQty}</span>
+          <span class="ganancia-pos">$${o.gananciaARS.toLocaleString('es-AR', {maximumFractionDigits: 2})}</span>
+        </div>
+        <div class="item-monto">${new Date(o.fecha).toLocaleString('es-AR')} | TC: ${o.tipoCambio}</div>
+        ${o.notas ? `<div class="item-monto" style="color:var(--muted)">${o.notas}</div>` : ''}
+        <button class="btn-sm btn btn-danger" style="width:auto; margin-top:6px;" onclick="borrarOp(${o.id})">Eliminar</button>
+      </div>
+    `).join('') || '<p style="color:var(--muted)">Sin operaciones</p>';
+  }
+
+  function borrarOp(id) {
+    if (confirm('¿Eliminar esta operación?')) {
+      operations = operations.filter(o => o.id !== id);
+      localStorage.setItem('operations', JSON.stringify(operations));
+      actualizarHistorial();
+      actualizarSaldos();
+    }
+  }
+
+  function actualizarSaldos() {
+    const saldos = {};
+    operations.forEach(o => {
+      saldos[o.recibisMon] = (saldos[o.recibisMon] || 0) + o.recibisQty;
+    });
+
+    document.getElementById('saldosBar').innerHTML = Object.entries(saldos).map(([mon, qty]) => `
+      <div class="saldo-item">
+        <div class="saldo-moneda">${mon}</div>
+        <div class="saldo-valor">${qty.toLocaleString('es-AR', {maximumFractionDigits: 2})}</div>
+      </div>
+    `).join('');
+  }
+
+  function genMoneda() {
+    const por = {};
+    operations.forEach(o => {
+      por[o.recibisMon] = (por[o.recibisMon] || 0) + o.gananciaARS;
+    });
+
+    document.getElementById('repMonedaCont').innerHTML = Object.entries(por).map(([m, v]) =>
+      `<div class="item"><div class="item-header"><span>${m}</span><span class="ganancia-pos">$${v.toLocaleString('es-AR')}</span></div></div>`
+    ).join('') || '<p style="color:var(--muted)">Sin datos</p>';
+
+    if (charts.moneda) charts.moneda.destroy();
+    charts.moneda = new Chart(document.getElementById('chartMoneda'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(por),
+        datasets: [{
+          data: Object.values(por),
+          backgroundColor: ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+        }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+
+  function genTotal() {
+    const totalARS = operations.reduce((s, o) => s + o.gananciaARS, 0);
+    const mon = document.getElementById('consolMoneda').value;
+    let txt = mon === 'USD'
+      ? (totalARS / (cotizaciones.blue?.venta || 1550)).toFixed(2) + ' USD'
+      : '$' + totalARS.toLocaleString('es-AR');
+
+    document.getElementById('repTotalCont').innerHTML = `
+      <div class="resultado">
+        <div style="color:var(--muted)">Ganancia total histórica</div>
+        <div style="font-size:1.6rem;font-weight:700;color:var(--success)">${txt}</div>
+        <div style="font-size:0.85rem">${operations.length} operaciones</div>
+      </div>
+    `;
+
+    // últimos 7 días
+    const dias = {};
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dias[d.toISOString().slice(0, 10)] = 0;
+    }
+    operations.forEach(o => {
+      const k = o.fecha.slice(0, 10);
+      if (dias[k] !== undefined) dias[k] += o.gananciaARS;
+    });
+
+    if (charts.total) charts.total.destroy();
+    charts.total = new Chart(document.getElementById('chartTotal'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(dias).map(d => d.slice(5)),
+        datasets: [{ data: Object.values(dias), backgroundColor: '#10b981' }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Diario por hora
+    const porHora = {};
+    operations.forEach(o => {
+      const h = new Date(o.fecha).getHours();
+      porHora[h] = (porHora[h] || 0) + o.gananciaARS;
+    });
+
+    if (charts.diario) charts.diario.destroy();
+    charts.diario = new Chart(document.getElementById('chartDiario'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(porHora).map(h => h + 'h'),
+        datasets: [{ data: Object.values(porHora), backgroundColor: '#0ea5e9' }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    compararMes();
+  }
+
+  function compararMes() {
+    const now = new Date();
+    const mesAct = now.getMonth(), anioAct = now.getFullYear();
+    const mesAnt = mesAct === 0 ? 11 : mesAct - 1;
+    const anioAnt = mesAct === 0 ? anioAct - 1 : anioAct;
+
+    let act = 0, ant = 0;
+    operations.forEach(o => {
+      const d = new Date(o.fecha);
+      if (d.getMonth() === mesAct && d.getFullYear() === anioAct) act += o.gananciaARS;
+      if (d.getMonth() === mesAnt && d.getFullYear() === anioAnt) ant += o.gananciaARS;
+    });
+
+    const diff = act - ant;
+    document.getElementById('compMesCont').innerHTML = `
+      <div class="resultado">
+        <div>Mes actual: <strong>$${act.toLocaleString('es-AR')}</strong></div>
+        <div>Mes anterior: <strong>$${ant.toLocaleString('es-AR')}</strong></div>
+        <div style="margin-top:6px;color:${diff >= 0 ? '#10b981' : '#ef4444'}">
+          Diferencia: $${diff.toLocaleString('es-AR')}
+        </div>
+      </div>
+    `;
+  }
+
+  function exportarJSON() {
+    const data = JSON.stringify(operations, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cambista-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+  }
+
+  function borrarTodo() {
+    if (confirm('⚠️ ¿Borrar TODOS los datos? No se puede deshacer')) {
+      if (confirm('¿Seguro?')) {
+        operations = [];
+        localStorage.setItem('operations', JSON.stringify(operations));
+        location.reload();
+      }
+    }
+  }
+
+  function init() {
+    cargarCotos();
+    actualizarHistorial();
+    actualizarSaldos();
+    if (operations.length) {
+      genMoneda();
+      genTotal();
+    }
+  }
+
+  init();
+  setInterval(cargarCotos, 60000);
+  setInterval(actualizarGlobo, 30000);
+</script>
+
+</body>
+</html>
