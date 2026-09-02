@@ -163,3 +163,11 @@ Si necesitas cambios o mejoras:
 ---
 
 **Desarrollado con ❤️ para Cambista Pro**
+
+
+---
+
+**© 2024 - Cambista Pro**
+
+Todos los derechos reservados. 
+Prohibida la copia, distribución o modificación sin autorización explícita.
