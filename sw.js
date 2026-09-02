@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cambista-v1';
+const CACHE_NAME = 'swapmpro-v1';
 const urlsToCache = [
   '/',
   '/index.html',
