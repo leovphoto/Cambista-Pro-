@@ -1,6 +1,6 @@
 {
-  "name": "Cambista Pro",
-  "short_name": "Cambista",
+  "name": "swapMpro",
+  "short_name": "swapM",
   "description": "Gestor de cambios de divisas - Calcula ganancias, mantén registros y emite reportes",
   "start_url": "/",
   "scope": "/",
